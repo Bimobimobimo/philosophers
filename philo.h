@@ -6,7 +6,7 @@
 /*   By: lcollong <lcollong@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 10:12:52 by lcollong          #+#    #+#             */
-/*   Updated: 2025/02/27 15:53:57 by lcollong         ###   ########.fr       */
+/*   Updated: 2025/02/28 16:37:43 by lcollong         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,61 +19,105 @@
 # include <string.h>
 # include <pthread.h>
 # include <stdbool.h>
+# include <sys/time.h>
+# include <limits.h>
+
+typedef struct	s_data	t_data;
+
+typedef struct s_fork
+{
+	pthread_mutex_t	fork;
+	int				fork_id;
+}	t_fork;
+
 
 typedef struct s_philo
 {
-	pthread_t		td;
-	int				philo_num;
-	bool			is_dead;
-	int				nb_of_meals;
-	struct s_philo	*next;
+	int			id;
+	long		meals_counter;
+	bool		finished;
+	long		last_meal_time;
+	t_fork		*left_fork;
+	t_fork		*right_fork;
+	pthread_t	tid;
+	t_data		*data;
 }	t_philo;
 
-typedef struct s_locks
-{
-	pthread_mutex_t	eating;
-	pthread_mutex_t	sleeping;
-	pthread_mutex_t	thinking;
-	pthread_mutex_t	r_fork;
-	pthread_mutex_t	l_fork;
-}	t_locks;
 
 typedef struct s_data
 {
-	int		nb;
-	int		time2die;
-	int		time2eat;
-	int		time2sleep;
-	int		min_meals;
-	t_philo	**philo;
-	t_locks	*locks;
+	long	philo_nb;
+	long	time2die;
+	long	time2eat;
+	long	time2sleep;
+	long	min_meals; // argument facultatif
+	long	start_time;
+	bool	the_end; // si un philo mort ou si tous finished
+	t_fork	*forks;
+	t_philo	*philos;
 }	t_data;
+
+
+typedef enum	s_action
+{
+	CREATE,
+	DETACH,
+	JOIN,
+	INIT,
+	DESTROY,
+	LOCK,
+	UNLOCK,	
+} t_action;
+
+
+// Parsing
+bool		valid_arguments(int argc, char **argv);
+bool		valid_nb(char *str);
+bool		too_many_digits(char *str);
+long		atol_philo(const char *nptr);
+
+bool		parse_data(t_data *data, char **argv);
+bool		get_philos(t_data *data);
+bool		get_forks(t_data *data);
 
 // Main functions
 void		philosophers(t_data *ph);
-
-// Threads
-pthread_t	create_threads(void);
-void		join_threads(pthread_t *philo);
-
-// Routines
-void		*philo_routine(void *ptr);
-void		*monitoring(void *ptr);
+bool		get_philos(t_data *data);
 
 // Mutexes
-void		init_mutexes(t_locks *locks);
-void		destroy_mutexes(t_locks *locks);
+bool		mutex_action(pthread_mutex_t *mutex, t_action action);
 
-// Data
-void		free_data_list(t_data *data);
-void		free_philo_list(t_philo **philo);
-t_philo		**create_philo_list(t_data *data);
-t_philo		*create_philo_node(t_data *data);
+// Threads
+bool		thread_action(pthread_t thread, t_action action, void *(*routine)(void *),
+				t_data *data);
+
+// Error
+void		arg_error(void);
+bool		thread_mutex_error(t_action action);
+
+// Clean up
+void		free_data(t_data *data);
+
+
+
+
+
+
+
+
+
+// // Threads
+// pthread_t	create_threads(void);
+// void		join_threads(pthread_t *philo);
+
+// // Routines
+// void		*philo_routine(void *ptr);
+// void		*monitoring(void *ptr);
+
 
 
 // Utils
-t_data		get_data(char **argv);
-int			ft_atoi(const char *nptr);
-bool		is_positive_nb(int argc, char **argv);
+
+
 
 #endif

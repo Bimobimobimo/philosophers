@@ -6,7 +6,7 @@
 #    By: lcollong <lcollong@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/01/15 16:34:46 by lcollong          #+#    #+#              #
-#    Updated: 2025/02/27 13:28:42 by lcollong         ###   ########.fr        #
+#    Updated: 2025/02/28 14:33:19 by lcollong         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,9 +20,11 @@ SRC_DIR = src
 OBJ_DIR = obj
 
 SRC = 	$(SRC_DIR)/philo.c \
+		$(SRC_DIR)/parsing.c \
+		$(SRC_DIR)/parsing_utils.c \
+		$(SRC_DIR)/cleanup.c \
 		$(SRC_DIR)/mutexes.c \
-		$(SRC_DIR)/data.c \
-		$(SRC_DIR)/utils.c
+		$(SRC_DIR)/error.c
 
 OBJ = $(SRC:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
 
