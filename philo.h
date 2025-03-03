@@ -6,7 +6,7 @@
 /*   By: lcollong <lcollong@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 10:12:52 by lcollong          #+#    #+#             */
-/*   Updated: 2025/03/03 13:56:43 by lcollong         ###   ########.fr       */
+/*   Updated: 2025/03/03 15:07:38 by lcollong         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,13 +55,14 @@ typedef struct s_data
 	bool			the_end; // si un philo meurt ou si tous finished
 	bool			threads_ready;
 	pthread_mutex_t	sim_mutex; // permet d'eviter les data races
+	pthread_mutex_t	print_mutex; // permet a un thread d'ecrire de facon securisee
 	t_fork			*forks;
 	t_philo			*philos;
 	pthread_t		monitor;
 }	t_data;
 
 
-typedef enum	s_action
+typedef enum	s_option
 {
 	CREATE,
 	DETACH,
@@ -70,7 +71,18 @@ typedef enum	s_action
 	DESTROY,
 	LOCK,
 	UNLOCK,	
-} t_action;
+} t_option;
+
+
+typedef enum	s_action
+{
+	LEFT,
+	RIGHT,
+	EAT,
+	SLEEP,
+	THINK,
+	DIED,
+}	t_action;
 
 
 // Parsing
@@ -93,17 +105,18 @@ long		timer(void);
 void		waiting(long time, t_data *data);
 
 // Mutexes
-bool		mutex_action(pthread_mutex_t *mutex, t_action action);
+bool		mutex_option(pthread_mutex_t *mutex, t_option choice);
 
 // Threads
-bool		thread_action(pthread_t thread, t_action action,
+bool		thread_option(pthread_t thread, t_option choice,
 				void *(*routine)(void *), t_data *data);
 void		philo_routine(void *argt);
 void		*monitoring(t_data *data);
 
-// Error
+// Printing messages
 void		arg_error(void);
-bool		thread_mutex_error(t_action action);
+bool		thread_mutex_error(t_option option);
+bool		print_action(t_philo *philo, t_data *data, t_action action);
 
 // Clean up
 void		free_all(t_data *data);

@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   error.c                                            :+:      :+:    :+:   */
+/*   print.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lcollong <lcollong@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 11:33:37 by lcollong          #+#    #+#             */
-/*   Updated: 2025/02/28 15:58:40 by lcollong         ###   ########.fr       */
+/*   Updated: 2025/03/03 15:24:03 by lcollong         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,21 +24,45 @@ void	arg_error(void)
 	printf("< 2'147'483'647.\033[0m\n\n");
 }
 
-bool	thread_mutex_error(t_action action)
+bool	thread_mutex_error(t_option choice)
 {
-	if (action == INIT)
+	if (choice == INIT)
 		printf("Mutex initiation error\n");
-	else if (action == DESTROY)
+	else if (choice == DESTROY)
 		printf("Mutex destruction error\n");
-	else if (action == LOCK)
+	else if (choice == LOCK)
 		printf("Mutex lock error\n");
-	else if (action == UNLOCK)
+	else if (choice == UNLOCK)
 		printf("Mutex unlock error\n");
-	else if (action == CREATE)
+	else if (choice == CREATE)
 		printf("Thread creation error\n");
-	else if (action == JOIN)
+	else if (choice == JOIN)
 		printf("Thread joining error\n");
-	else if (action == DETACH)
+	else if (choice == DETACH)
 		printf("Thread detaching error\n");
 	return (false);
+}
+
+bool	print_action(t_philo *philo, t_data *data, t_action action)
+{
+	long	time;
+
+	time = timer() / 1000 - data->start_time / 1000; // en millisecondes
+	if (philo->finished)
+		return (true);
+	if (!mutex_option(&data->print_mutex, LOCK))
+		return (false);
+	if (action == LEFT || action == RIGHT && !data->the_end)
+		printf("%ld   %d has taken a fork\n", time, philo->id);
+	else if (action == EAT && !data->the_end)
+		printf("%ld   %d is eating\n", time, philo->id);
+	else if (action == SLEEP && !data->the_end)
+		printf("%ld   %d is sleeping\n", time, philo->id);
+	else if (action == THINK && !data->the_end)
+		printf("%ld   %d is thinking\n", time, philo->id);
+	else if (action == DIED)
+		printf("%ld   %d died\n", time, philo->id);
+	if (!mutex_option(&data->print_mutex, UNLOCK))
+		return (false);
+	return (true);
 }

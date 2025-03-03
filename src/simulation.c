@@ -6,7 +6,7 @@
 /*   By: lcollong <lcollong@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/01 12:35:46 by lcollong          #+#    #+#             */
-/*   Updated: 2025/03/03 13:59:03 by lcollong         ###   ########.fr       */
+/*   Updated: 2025/03/03 14:42:59 by lcollong         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ void	simulation(t_data *data)
 			i++;
 		}
 	}
-	data->start_time = timer(); // start time !
+	data->start_time = timer() ; // start time en microsecondes
 	data->threads_ready = true;
 
 	//? comment determiner qu'on ne veut joindre que qd tt le monde a fini ?

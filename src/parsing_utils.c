@@ -6,7 +6,7 @@
 /*   By: lcollong <lcollong@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 17:27:46 by lcollong          #+#    #+#             */
-/*   Updated: 2025/03/03 12:31:12 by lcollong         ###   ########.fr       */
+/*   Updated: 2025/03/03 15:22:32 by lcollong         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,11 +35,18 @@ long	atol_philo(const char *nptr)
 bool	too_many_digits(char *str)
 {
 	int	i;
+	int	count;
 
 	i = 0;
+	count = 0;
+	if (str[i] == '+')
+		i++;
 	while (str[i] >= '0' && str[i] <= '9')
-		i++;	
-	if (i > 10)
+	{
+		count++;
+		i++;
+	}
+	if (count > 10)
 		return (true);
 	return (false);
 }
@@ -57,9 +64,13 @@ bool	valid_nb(char *str)
 		return (false);
 	if (str[i] == '+')
 		i++;
-	if (str[i] < '0' && str[i] > '9')
-		return (false);
-	if (too_many_digits(str + i))
+	while (str[i])
+	{
+		if (str[i] < '0' && str[i] > '9') //faux si autre chose que des chiffres
+			return (false);
+		i++;
+	}
+	if (too_many_digits(str))
 		return (false);
 	return (true);
 }
