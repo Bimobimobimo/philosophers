@@ -6,7 +6,7 @@
 /*   By: lcollong <lcollong@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 17:27:46 by lcollong          #+#    #+#             */
-/*   Updated: 2025/02/28 14:03:56 by lcollong         ###   ########.fr       */
+/*   Updated: 2025/03/03 12:31:12 by lcollong         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,8 @@ long	atol_philo(const char *nptr)
 	return (nb);
 }
 
+// compte cb de chiffres, si superieur a 10, alors c'est forcement
+// > INT MAX car 2 147 483 647 = 10 chiffres
 bool	too_many_digits(char *str)
 {
 	int	i;
@@ -37,7 +39,7 @@ bool	too_many_digits(char *str)
 	i = 0;
 	while (str[i] >= '0' && str[i] <= '9')
 		i++;	
-	if (i > 10)// 2 147 483 647 = 10 chiffres
+	if (i > 10)
 		return (true);
 	return (false);
 }
@@ -57,7 +59,7 @@ bool	valid_nb(char *str)
 		i++;
 	if (str[i] < '0' && str[i] > '9')
 		return (false);
-	if (too_many_digits(str + i)) //todo
+	if (too_many_digits(str + i))
 		return (false);
 	return (true);
 }

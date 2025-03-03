@@ -6,7 +6,7 @@
 /*   By: lcollong <lcollong@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 13:14:59 by lcollong          #+#    #+#             */
-/*   Updated: 2025/02/28 16:14:46 by lcollong         ###   ########.fr       */
+/*   Updated: 2025/03/03 13:10:04 by lcollong         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,10 @@ bool	parse_data(t_data *data, char **argv)
 {
 	data = malloc(sizeof(t_data));
 	if (!data)
+	{
+		printf("Malloc error\n");
 		return (false);
+	}
 	data->philo_nb = atol_philo(argv[1]);
 	data->time2die = atol_philo(argv[2]);
 	data->time2eat = atol_philo(argv[3]);
@@ -26,6 +29,9 @@ bool	parse_data(t_data *data, char **argv)
 	else
 		data->min_meals = -1;
 	data->the_end = false;
+	data->threads_ready = false;
+	if (!mutex_action(&data->sim_mutex, INIT)) // mutex de la simul pour l'empecher de commencer avant que tout soit pret
+		return (false);
 
 	// // debogage
 	// 	printf("\n ~ ARGUMENTS ~\n");
@@ -43,6 +49,8 @@ bool	valid_arguments(int argc, char **argv)
 	int	i;
 
 	i = 1;
+	if (argc != 5 && argc != 6)
+		return (false);
 	while (i < argc)
 	{
 		if (!valid_nb(argv[i]) || atol_philo(argv[i]) < 0)

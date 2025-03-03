@@ -6,7 +6,7 @@
 /*   By: lcollong <lcollong@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 10:12:52 by lcollong          #+#    #+#             */
-/*   Updated: 2025/02/28 16:37:43 by lcollong         ###   ########.fr       */
+/*   Updated: 2025/03/03 13:56:43 by lcollong         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,24 +37,27 @@ typedef struct s_philo
 	long		meals_counter;
 	bool		finished;
 	long		last_meal_time;
+	t_data		*data;
 	t_fork		*left_fork;
 	t_fork		*right_fork;
 	pthread_t	tid;
-	t_data		*data;
 }	t_philo;
 
 
 typedef struct s_data
 {
-	long	philo_nb;
-	long	time2die;
-	long	time2eat;
-	long	time2sleep;
-	long	min_meals; // argument facultatif
-	long	start_time;
-	bool	the_end; // si un philo mort ou si tous finished
-	t_fork	*forks;
-	t_philo	*philos;
+	long			philo_nb;
+	long			time2die;
+	long			time2eat;
+	long			time2sleep;
+	long			min_meals; // argument facultatif
+	long			start_time;
+	bool			the_end; // si un philo meurt ou si tous finished
+	bool			threads_ready;
+	pthread_mutex_t	sim_mutex; // permet d'eviter les data races
+	t_fork			*forks;
+	t_philo			*philos;
+	pthread_t		monitor;
 }	t_data;
 
 
@@ -83,20 +86,27 @@ bool		get_forks(t_data *data);
 // Main functions
 void		philosophers(t_data *ph);
 bool		get_philos(t_data *data);
+void		simulation(t_data *data);
+
+// Time Management
+long		timer(void);
+void		waiting(long time, t_data *data);
 
 // Mutexes
 bool		mutex_action(pthread_mutex_t *mutex, t_action action);
 
 // Threads
-bool		thread_action(pthread_t thread, t_action action, void *(*routine)(void *),
-				t_data *data);
+bool		thread_action(pthread_t thread, t_action action,
+				void *(*routine)(void *), t_data *data);
+void		philo_routine(void *argt);
+void		*monitoring(t_data *data);
 
 // Error
 void		arg_error(void);
 bool		thread_mutex_error(t_action action);
 
 // Clean up
-void		free_data(t_data *data);
+void		free_all(t_data *data);
 
 
 
