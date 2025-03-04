@@ -6,7 +6,7 @@
 #    By: lcollong <lcollong@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/01/15 16:34:46 by lcollong          #+#    #+#              #
-#    Updated: 2025/03/04 10:21:38 by lcollong         ###   ########.fr        #
+#    Updated: 2025/03/04 13:17:21 by lcollong         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,7 +19,7 @@ CFLAGS += -Wall -Wextra -Werror -g -pthread
 SRC_DIR = src
 OBJ_DIR = obj
 
-SRC = 	$(SRC_DIR)/philo.c \
+SRC = 	$(SRC_DIR)/main.c \
 		$(SRC_DIR)/parsing.c \
 		$(SRC_DIR)/parsing_utils.c \
 		$(SRC_DIR)/mutexes.c \

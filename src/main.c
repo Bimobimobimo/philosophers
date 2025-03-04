@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   philo.c                                            :+:      :+:    :+:   */
+/*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lcollong <lcollong@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 17:02:22 by lcollong          #+#    #+#             */
-/*   Updated: 2025/03/04 11:30:53 by lcollong         ###   ########.fr       */
+/*   Updated: 2025/03/04 14:24:33 by lcollong         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,23 +29,22 @@ static void	forks_to_philos(t_philo *philo, t_fork *forks, int philo_index)
 	}	
 }
 
-bool	get_philos(t_data *data)
+bool	get_philos(t_data *data, t_philo *philos)
 {
 	int		i;
-	t_philo	*philo;
 
 	i = 0;
 	while (i < data->philo_nb) // initier toutes les var des struc philo
 	{
-		philo = data->philos + i;
-		philo->id = i + 1;
-		philo->meals_counter = 0;
-		philo->finished = false;
-		philo->data = data;
-		if (!thread_option(philo->tid, CREATE, philo_routine, data))
-			return (false);
-		forks_to_philos(philo, data->forks, i);
-		if (!mutex_option(&data->philos->philo_mutex, INIT))
+		philos[i].id = i + 1;
+		philos[i].meals_counter = 0;
+		philos[i].last_meal_time = data->start_time;
+		philos[i].finished = false;
+		philos[i].died = false;
+		philos[i].data = data;
+		philos[i].tid = -1;
+		forks_to_philos(&philos[i], data->forks, i);
+		if (!mutex_option(&data->philos[i].philo_mutex, INIT, "philo_mutex")) //? pourquoi ?
 			return (false);
 		i++;
 	}
@@ -56,29 +55,29 @@ void	philosophers(t_data *data)
 {
 	int	i;
 
-	i = 0;
-	data->philos = malloc(sizeof(t_philo));
+	data->philos = malloc(sizeof(t_philo) * data->philo_nb); //autant de struc que de philos
 	if (!data->philos)
 	{
 		printf("Malloc error\n");
 		return ;
 	}
-	if (!mutex_option(&data->sim_mutex, INIT)) // pourquoi ?
+	if (!mutex_option(&data->sim_mutex, INIT, "sim_mutex")) //? pourquoi ?
 		return ;
-	data->forks = malloc(sizeof(t_fork));
+	data->forks = malloc(sizeof(t_fork) * data->philo_nb); //autant de struc forks que de fourchettes (cad de philos)
 	if (!data->forks)
 	{
 		printf("Malloc error\n");
 		return ;
 	}
+	i = 0;
 	while (i < data->philo_nb)
 	{
-		if (!mutex_option(&data->forks[i].fork, INIT)) // un mutex par struc fork
+		if (!mutex_option(&data->forks[i].fork, INIT, "fork")) // un mutex par struc fork
 			return ;
-		data->forks[i].fork_id = i;
+		data->forks[i].fork_id = i; //l'id des fourchettes commence a 0
 		i++;
 	}
-	if (!get_philos(data))
+	if (!get_philos(data, data->philos))
 		return ;
 	simulation(data);
 }
@@ -100,19 +99,21 @@ int	main(int argc, char **argv)
 			free_all(data);
 			return (1);
 		}
-		// debogage
-		printf("\n ~ ARGUMENTS ~\n");
-		printf("philo_nb = %ld\n", data->philo_nb);
-		printf("time2die = %ld\n", data->time2die);
-		printf("time2eat = %ld\n", data->time2eat);
-		printf("time2sleep = %ld\n", data->time2sleep);
-		printf("min_meals = %ld\n", data->min_meals);
-		printf("start_time = %ld\n", data->start_time);
-		printf("the_end = %d\n", data->the_end);
-		printf("threads_ready = %d\n", data->threads_ready);
-		printf("pthread_t = %lu\n", data->monitor);
-		printf("forks = %p\n", data->forks);
-		printf("philos = %p\n\n", data->philos);
+		// // debogage
+		// printf("\n ~ ARGUMENTS ~\n");
+		// printf("philo_nb = %ld\n", data->philo_nb);
+		// printf("time2die = %ld\n", data->time2die);
+		// printf("time2eat = %ld\n", data->time2eat);
+		// printf("time2sleep = %ld\n", data->time2sleep);
+		// printf("min_meals = %ld\n", data->min_meals);
+		// printf("start_time = %ld\n", data->start_time);
+		// printf("the_end = %d\n", data->the_end);
+		// printf("threads_ready = %d\n", data->threads_ready);
+		// printf("pthread_t = %lu\n", data->monitor);
+		// printf("forks = %p\n", data->forks);
+		// printf("philos = %p\n\n", data->philos);
+		
+
 		
 		philosophers(data);
 		free_all(data);

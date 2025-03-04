@@ -6,7 +6,7 @@
 /*   By: lcollong <lcollong@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 11:33:37 by lcollong          #+#    #+#             */
-/*   Updated: 2025/03/04 10:17:19 by lcollong         ###   ########.fr       */
+/*   Updated: 2025/03/04 14:31:27 by lcollong         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,19 +50,19 @@ bool	print_action(t_philo *philo, t_data *data, t_action action)
 	time = timer() / 1000 - data->start_time / 1000; // en millisecondes
 	if (philo->finished)
 		return (true);
-	if (!mutex_option(&data->print_mutex, LOCK))
+	if (!mutex_option(&data->print_mutex, LOCK, "print_mutex"))
 		return (false);
 	if ((action == LEFT || action == RIGHT) && !data->the_end)
-		printf("%ld   %d has taken a fork\n", time, philo->id);
+		printf("\n%ld  %d has taken a fork\n\n", time, philo->id);
 	else if (action == EAT && !data->the_end)
-		printf("%ld   %d is eating\n", time, philo->id);
+		printf("\n%ld  %d is eating\n\n", time, philo->id);
 	else if (action == SLEEP && !data->the_end)
-		printf("%ld   %d is sleeping\n", time, philo->id);
+		printf("\n%ld  %d is sleeping\n\n", time, philo->id);
 	else if (action == THINK && !data->the_end)
-		printf("%ld   %d is thinking\n", time, philo->id);
+		printf("\n%ld  %d is thinking\n\n", time, philo->id);
 	else if (action == DIED)
-		printf("%ld   %d died\n", time, philo->id);
-	if (!mutex_option(&data->print_mutex, UNLOCK))
+		printf("\n%ld  %d died\n\n", time, philo->id);
+	if (!mutex_option(&data->print_mutex, UNLOCK, "print_mutex"))
 		return (false);
 	return (true);
 }

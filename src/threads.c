@@ -6,7 +6,7 @@
 /*   By: lcollong <lcollong@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 15:43:59 by lcollong          #+#    #+#             */
-/*   Updated: 2025/03/04 10:23:35 by lcollong         ###   ########.fr       */
+/*   Updated: 2025/03/04 14:26:22 by lcollong         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,22 +23,22 @@ static bool	taking_forks(t_philo *philo)
 {
 	if (philo->id % 2 == 0) //pair
 	{
-		if (!mutex_option(&philo->right_fork->fork, LOCK))
+		if (!mutex_option(&philo->right_fork->fork, LOCK, "fork"))
 			return (false);
 		if (!print_action(philo, philo->data, RIGHT))
 			return (false);
-		if (!mutex_option(&philo->left_fork->fork, LOCK))
+		if (!mutex_option(&philo->left_fork->fork, LOCK, "fork"))
 			return (false);
 		if (!print_action(philo, philo->data, LEFT))
 			return (false);
 	}
 	else //impair
 	{
-		if (!mutex_option(&philo->left_fork->fork, LOCK))
+		if (!mutex_option(&philo->left_fork->fork, LOCK, "fork"))
 			return (false);
 		if (!print_action(philo, philo->data, LEFT))
 			return (false);
-		if (!mutex_option(&philo->right_fork->fork, LOCK))
+		if (!mutex_option(&philo->right_fork->fork, LOCK, "fork"))
 			return (false);
 		if (!print_action(philo, philo->data, RIGHT))
 			return (false);
@@ -57,8 +57,8 @@ static bool	eating(t_philo *philo)
 		return (false);
 	if (philo->meals_counter >= philo->data->min_meals)
 		philo->finished = true;
-	if (!mutex_option(&philo->left_fork->fork, UNLOCK)
-		|| !mutex_option(&philo->right_fork->fork, UNLOCK))
+	if (!mutex_option(&philo->left_fork->fork, UNLOCK, "fork")
+		|| !mutex_option(&philo->right_fork->fork, UNLOCK, "fork"))
 		return (false);
 	return (true);
 }
@@ -75,9 +75,15 @@ void	*philo_routine(void *argt)
 		if (philo->finished)
 			return (NULL);
 		if (!taking_forks(philo))
+		{
+			printf("Taking_forks error in threads.c\n");
 			return (NULL);
+		}
 		if (!eating(philo))
+		{
+			printf("Eating error in threads.c\n");
 			return (NULL);
+		}
 		if (!print_action(philo, philo->data, SLEEP))
 			return (NULL);
 		waiting(philo->data->time2sleep, philo->data);
@@ -94,16 +100,22 @@ bool	thread_option(pthread_t thread, t_option choice, void *(*routine)(void *),
 	{
 		if (pthread_create(&thread, NULL, routine, argt) != 0)
 			return (thread_mutex_error(choice));
+		else
+			printf("Thread created\n");
 	}
 	else if (choice == JOIN)
 	{
 		if (pthread_join(thread, NULL) != 0)
 			return (thread_mutex_error(choice));
+		else
+			printf("Thread joined\n");
 	}
 	else if (choice == DETACH)
 	{
 		if (pthread_detach(thread) != 0)
 			return (thread_mutex_error(choice));
+		else
+			printf("Thread detached\n");
 	}
 	return (true);
 }

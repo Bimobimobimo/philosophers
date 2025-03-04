@@ -6,7 +6,7 @@
 /*   By: lcollong <lcollong@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 10:12:52 by lcollong          #+#    #+#             */
-/*   Updated: 2025/03/04 10:16:06 by lcollong         ###   ########.fr       */
+/*   Updated: 2025/03/04 14:23:07 by lcollong         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@ typedef struct s_philo
 	long			meals_counter;
 	bool			finished;
 	long			last_meal_time;
+	bool			died;
 	t_data			*data;
 	t_fork			*left_fork;
 	t_fork			*right_fork;
@@ -93,12 +94,11 @@ bool		too_many_digits(char *str);
 long		atol_philo(const char *nptr);
 
 bool		parse_data(t_data *data, char **argv);
-bool		get_philos(t_data *data);
 bool		get_forks(t_data *data);
 
 // Main functions
 void		philosophers(t_data *ph);
-bool		get_philos(t_data *data);
+bool		get_philos(t_data *data, t_philo *philos);
 void		simulation(t_data *data);
 
 // Time Management
@@ -106,13 +106,13 @@ long		timer(void);
 void		waiting(long time, t_data *data);
 
 // Mutexes
-bool		mutex_option(pthread_mutex_t *mutex, t_option choice);
+bool		mutex_option(pthread_mutex_t *mutex, t_option choice, char *str);
 
 // Threads
 bool		thread_option(pthread_t thread, t_option choice,
 				void *(*routine)(void *), void *argt);
 void		*philo_routine(void *argt);
-void		*monitoring(t_data *data);
+void		*monitoring(void *argt);
 
 // Printing messages
 void		arg_error(void);
