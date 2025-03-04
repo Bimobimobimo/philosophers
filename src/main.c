@@ -6,7 +6,7 @@
 /*   By: lcollong <lcollong@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 17:02:22 by lcollong          #+#    #+#             */
-/*   Updated: 2025/03/04 14:24:33 by lcollong         ###   ########.fr       */
+/*   Updated: 2025/03/04 15:45:15 by lcollong         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,8 +61,6 @@ void	philosophers(t_data *data)
 		printf("Malloc error\n");
 		return ;
 	}
-	if (!mutex_option(&data->sim_mutex, INIT, "sim_mutex")) //? pourquoi ?
-		return ;
 	data->forks = malloc(sizeof(t_fork) * data->philo_nb); //autant de struc forks que de fourchettes (cad de philos)
 	if (!data->forks)
 	{
