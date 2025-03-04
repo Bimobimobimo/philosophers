@@ -6,7 +6,7 @@
 /*   By: lcollong <lcollong@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 11:33:37 by lcollong          #+#    #+#             */
-/*   Updated: 2025/03/03 15:24:03 by lcollong         ###   ########.fr       */
+/*   Updated: 2025/03/04 10:17:19 by lcollong         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ bool	print_action(t_philo *philo, t_data *data, t_action action)
 		return (true);
 	if (!mutex_option(&data->print_mutex, LOCK))
 		return (false);
-	if (action == LEFT || action == RIGHT && !data->the_end)
+	if ((action == LEFT || action == RIGHT) && !data->the_end)
 		printf("%ld   %d has taken a fork\n", time, philo->id);
 	else if (action == EAT && !data->the_end)
 		printf("%ld   %d is eating\n", time, philo->id);

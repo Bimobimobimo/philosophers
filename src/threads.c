@@ -6,7 +6,7 @@
 /*   By: lcollong <lcollong@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 15:43:59 by lcollong          #+#    #+#             */
-/*   Updated: 2025/03/03 16:14:41 by lcollong         ###   ########.fr       */
+/*   Updated: 2025/03/04 10:23:35 by lcollong         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,17 +48,17 @@ static bool	taking_forks(t_philo *philo)
 
 static bool	eating(t_philo *philo)
 {
-	if (!print_action(philo, philo->data, EAT))
-		return (false);
 	philo->last_meal_time = timer(); //microsecondes pour precision
 	if (philo->last_meal_time < 0)
 		return (false);
-	waiting(philo->data->time2eat, philo->data);
 	philo->meals_counter++;
+	waiting(philo->data->time2eat, philo->data);
+	if (!print_action(philo, philo->data, EAT))
+		return (false);
 	if (philo->meals_counter >= philo->data->min_meals)
 		philo->finished = true;
-	if (!mutex_option(philo->left_fork, UNLOCK)
-		|| !mutex_option(philo->right_fork, UNLOCK))
+	if (!mutex_option(&philo->left_fork->fork, UNLOCK)
+		|| !mutex_option(&philo->right_fork->fork, UNLOCK))
 		return (false);
 	return (true);
 }
@@ -87,17 +87,23 @@ void	*philo_routine(void *argt)
 	return (NULL);
 }
 
-bool	thread_action(pthread_t thread, t_action action, void *(*routine)(void *),
+bool	thread_option(pthread_t thread, t_option choice, void *(*routine)(void *),
 	void *argt)
 {
-	if (action == CREATE)
-		if (pthread_create(thread, NULL, routine, argt) != 0)
-			return (thread_mutex_error(action));
-	else if (action == JOIN)
+	if (choice == CREATE)
+	{
+		if (pthread_create(&thread, NULL, routine, argt) != 0)
+			return (thread_mutex_error(choice));
+	}
+	else if (choice == JOIN)
+	{
 		if (pthread_join(thread, NULL) != 0)
-			return (thread_mutex_error(action));
-	else if (action == DETACH)
+			return (thread_mutex_error(choice));
+	}
+	else if (choice == DETACH)
+	{
 		if (pthread_detach(thread) != 0)
-			return (thread_mutex_error(action));
+			return (thread_mutex_error(choice));
+	}
 	return (true);
 }

@@ -6,7 +6,7 @@
 /*   By: lcollong <lcollong@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 10:12:52 by lcollong          #+#    #+#             */
-/*   Updated: 2025/03/03 15:07:38 by lcollong         ###   ########.fr       */
+/*   Updated: 2025/03/04 10:16:06 by lcollong         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,14 +33,15 @@ typedef struct s_fork
 
 typedef struct s_philo
 {
-	int			id;
-	long		meals_counter;
-	bool		finished;
-	long		last_meal_time;
-	t_data		*data;
-	t_fork		*left_fork;
-	t_fork		*right_fork;
-	pthread_t	tid;
+	int				id;
+	long			meals_counter;
+	bool			finished;
+	long			last_meal_time;
+	t_data			*data;
+	t_fork			*left_fork;
+	t_fork			*right_fork;
+	pthread_t		tid;
+	pthread_mutex_t	philo_mutex;
 }	t_philo;
 
 
@@ -56,9 +57,9 @@ typedef struct s_data
 	bool			threads_ready;
 	pthread_mutex_t	sim_mutex; // permet d'eviter les data races
 	pthread_mutex_t	print_mutex; // permet a un thread d'ecrire de facon securisee
+	pthread_t		monitor;
 	t_fork			*forks;
 	t_philo			*philos;
-	pthread_t		monitor;
 }	t_data;
 
 
@@ -109,8 +110,8 @@ bool		mutex_option(pthread_mutex_t *mutex, t_option choice);
 
 // Threads
 bool		thread_option(pthread_t thread, t_option choice,
-				void *(*routine)(void *), t_data *data);
-void		philo_routine(void *argt);
+				void *(*routine)(void *), void *argt);
+void		*philo_routine(void *argt);
 void		*monitoring(t_data *data);
 
 // Printing messages

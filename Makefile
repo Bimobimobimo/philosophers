@@ -6,7 +6,7 @@
 #    By: lcollong <lcollong@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/01/15 16:34:46 by lcollong          #+#    #+#              #
-#    Updated: 2025/03/03 14:48:09 by lcollong         ###   ########.fr        #
+#    Updated: 2025/03/04 10:21:38 by lcollong         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -23,8 +23,9 @@ SRC = 	$(SRC_DIR)/philo.c \
 		$(SRC_DIR)/parsing.c \
 		$(SRC_DIR)/parsing_utils.c \
 		$(SRC_DIR)/mutexes.c \
-		$(SRC_DIR)/simulationc. \
-		$(SRC_DIR)/timer.c \
+		$(SRC_DIR)/threads.c \
+		$(SRC_DIR)/simulation.c \
+		$(SRC_DIR)/time.c \
 		$(SRC_DIR)/cleanup.c \
 		$(SRC_DIR)/print.c
 

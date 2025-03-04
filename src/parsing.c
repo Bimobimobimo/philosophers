@@ -6,7 +6,7 @@
 /*   By: lcollong <lcollong@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 13:14:59 by lcollong          #+#    #+#             */
-/*   Updated: 2025/03/03 13:10:04 by lcollong         ###   ########.fr       */
+/*   Updated: 2025/03/04 10:51:46 by lcollong         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,6 @@
 
 bool	parse_data(t_data *data, char **argv)
 {
-	data = malloc(sizeof(t_data));
-	if (!data)
-	{
-		printf("Malloc error\n");
-		return (false);
-	}
 	data->philo_nb = atol_philo(argv[1]);
 	data->time2die = atol_philo(argv[2]);
 	data->time2eat = atol_philo(argv[3]);
@@ -30,17 +24,14 @@ bool	parse_data(t_data *data, char **argv)
 		data->min_meals = -1;
 	data->the_end = false;
 	data->threads_ready = false;
-	if (!mutex_action(&data->sim_mutex, INIT)) // mutex de la simul pour l'empecher de commencer avant que tout soit pret
+	if (!mutex_option(&data->sim_mutex, INIT)) // mutex de la simul pour l'empecher de commencer avant que tout soit pret
 		return (false);
-
-	// // debogage
-	// 	printf("\n ~ ARGUMENTS ~\n");
-	// 	printf("philo_nb = %ld\n", data->philo_nb);
-	// 	printf("time2die = %ld\n", data->time2die);
-	// 	printf("time2eat = %ld\n", data->time2eat);
-	// 	printf("time2sleep = %ld\n", data->time2sleep);
-	// 	printf("min_meals = %ld\n\n", data->min_meals);
-
+	if (!mutex_option(&data->print_mutex, INIT))
+		return (false);
+	data->start_time = -1;
+	data->monitor = -1;
+	data->forks = NULL;
+	data->philos = NULL;
 	return (true);
 }
 

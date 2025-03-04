@@ -6,7 +6,7 @@
 /*   By: lcollong <lcollong@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 17:02:22 by lcollong          #+#    #+#             */
-/*   Updated: 2025/03/03 15:48:09 by lcollong         ###   ########.fr       */
+/*   Updated: 2025/03/04 11:30:53 by lcollong         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,9 +41,12 @@ bool	get_philos(t_data *data)
 		philo->id = i + 1;
 		philo->meals_counter = 0;
 		philo->finished = false;
-		// philo->tid = 0;
 		philo->data = data;
+		if (!thread_option(philo->tid, CREATE, philo_routine, data))
+			return (false);
 		forks_to_philos(philo, data->forks, i);
+		if (!mutex_option(&data->philos->philo_mutex, INIT))
+			return (false);
 		i++;
 	}
 	return (true);	
@@ -60,7 +63,7 @@ void	philosophers(t_data *data)
 		printf("Malloc error\n");
 		return ;
 	}
-	if (!mutex_action(&data->sim_mutex, INIT)) // pourquoi ?
+	if (!mutex_option(&data->sim_mutex, INIT)) // pourquoi ?
 		return ;
 	data->forks = malloc(sizeof(t_fork));
 	if (!data->forks)
@@ -70,7 +73,7 @@ void	philosophers(t_data *data)
 	}
 	while (i < data->philo_nb)
 	{
-		if (!mutex_action(&data->forks[i].fork, INIT)) // un mutex par struc fork
+		if (!mutex_option(&data->forks[i].fork, INIT)) // un mutex par struc fork
 			return ;
 		data->forks[i].fork_id = i;
 		i++;
@@ -82,17 +85,37 @@ void	philosophers(t_data *data)
 
 int	main(int argc, char **argv)
 {
-	t_data	data;
+	t_data	*data;
 
+	data = malloc(sizeof(t_data));
+	if (!data)
+	{
+		printf("Malloc error\n");
+		return (1);
+	}
 	if (valid_arguments(argc, argv))
 	{
-		if (!parse_data(&data, argv))
+		if (!parse_data(data, argv))
 		{
-			free_all(&data);
+			free_all(data);
 			return (1);
 		}
-		philosophers(&data);
-		free_all(&data);
+		// debogage
+		printf("\n ~ ARGUMENTS ~\n");
+		printf("philo_nb = %ld\n", data->philo_nb);
+		printf("time2die = %ld\n", data->time2die);
+		printf("time2eat = %ld\n", data->time2eat);
+		printf("time2sleep = %ld\n", data->time2sleep);
+		printf("min_meals = %ld\n", data->min_meals);
+		printf("start_time = %ld\n", data->start_time);
+		printf("the_end = %d\n", data->the_end);
+		printf("threads_ready = %d\n", data->threads_ready);
+		printf("pthread_t = %lu\n", data->monitor);
+		printf("forks = %p\n", data->forks);
+		printf("philos = %p\n\n", data->philos);
+		
+		philosophers(data);
+		free_all(data);
 	}
 	else
 		arg_error();

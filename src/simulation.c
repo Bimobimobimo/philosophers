@@ -6,7 +6,7 @@
 /*   By: lcollong <lcollong@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/01 12:35:46 by lcollong          #+#    #+#             */
-/*   Updated: 2025/03/03 14:42:59 by lcollong         ###   ########.fr       */
+/*   Updated: 2025/03/04 10:19:39 by lcollong         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,8 @@ static void	only_one_philo(void)
 
 void	*monitoring(t_data *data)
 {
-	
+	(void)data;
+	return (NULL);
 }
 
 void	simulation(t_data *data)
@@ -35,7 +36,7 @@ void	simulation(t_data *data)
 	{
 		while (i < data->philo_nb)
 		{
-			if (!thread_action(&data->philos[i].tid, CREATE, philo_routine,
+			if (!thread_option(data->philos[i].tid, CREATE, philo_routine,
 				&data->philos[i]))
 				return ;
 			i++;
@@ -48,14 +49,14 @@ void	simulation(t_data *data)
 	i = 0;
 	while (i < data->philo_nb)
 	{
-		if (!thread_action(&data->philos[i], JOIN, NULL, NULL))
+		if (!thread_option(data->philos[i].tid, JOIN, NULL, NULL))
 			return ;
 		i++;
 	}
 
 	
 	
-	// if (!thread_action(&data->monitor, CREATE, monitoring, data))
+	// if (!thread_option(&data->monitor, CREATE, monitoring, data))
 	// 	return ;
 	
 }
