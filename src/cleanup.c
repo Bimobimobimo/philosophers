@@ -6,7 +6,7 @@
 /*   By: lcollong <lcollong@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 11:29:00 by lcollong          #+#    #+#             */
-/*   Updated: 2025/03/04 17:38:30 by lcollong         ###   ########.fr       */
+/*   Updated: 2025/03/05 19:17:39 by lcollong         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,9 +19,9 @@ void	free_all(t_data *data)
 	i = 0;
 	if (data && data->forks)
 	{
-		while (&data->forks[i])
+		while (i < data->philo_nb)
 		{
-			mutex_option(&data->philos->left_fork->fork, DESTROY, "fork");
+			mutex_option(&data->philos->first_fork->lock, DESTROY);
 			i++;
 		}
 		free(data->forks);
@@ -29,17 +29,17 @@ void	free_all(t_data *data)
 	i = 0;
 	if (data && data->philos)
 	{
-		while (&data->philos[i])
+		while (i < data->philo_nb)
 		{
-			mutex_option(&data->philos->philo_mutex, DESTROY, "philo_mutex");
+			mutex_option(&data->philos->lock, DESTROY);
 			i++;
 		}
 		free(data->philos);
 	}
 	if (data)
 	{
-		mutex_option(&data->sim_mutex, DESTROY, "sim_mutex");
-		mutex_option(&data->print_mutex, DESTROY, "print_mutex");
+		mutex_option(&data->sim_lock, DESTROY);
+		mutex_option(&data->print_lock, DESTROY);
 		free(data);
 	}
 }

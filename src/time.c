@@ -6,7 +6,7 @@
 /*   By: lcollong <lcollong@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 13:28:02 by lcollong          #+#    #+#             */
-/*   Updated: 2025/03/03 14:47:09 by lcollong         ###   ########.fr       */
+/*   Updated: 2025/03/05 19:36:08 by lcollong         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,11 +23,11 @@ long	timer(void)
 		printf("Gettimeofday function error\n");
 		return (-1);
 	}
-	time = time_struct.tv_sec * 1000 * 1000 + time_struct.tv_usec; //tout en microsec
-	return (time);
+	time = time_struct.tv_sec * 1000 + time_struct.tv_usec / 1000;
+	return (time); //ms
 }
 
-void	waiting(long time, t_data *data)
+/* void	waiting(long time, t_data *data)
 {
 	long	start;
 	long	passed;
@@ -42,4 +42,31 @@ void	waiting(long time, t_data *data)
 		remains = time - passed;
 		usleep(remains); //! pas sur
 	}
+} */
+
+// eviter les injustices en cas de nombre impair de philosophes
+bool	desynchronize_philos(t_philo *philo, t_data *data)
+{
+	long	time2sleep;
+	
+	time2sleep = 0;	
+	if (philo->data->philo_nb % 2 == 0)
+	{
+		if (philo->id % 2 == 0)
+			usleep(100);
+	}
+	else
+	{
+		if (philo->id % 2 == 0)
+		{
+			if (!print_action(philo, data, SLEEP))
+				return (false);
+			time2sleep = (data->time2eat * 2 - data->time2sleep);
+			if (time2sleep < 0)
+				time2sleep = 0;
+			if (!usleep(0.1 * time2sleep * 1000)) //desynchro de 10% du time2sleep en microsecondes
+				return (false);
+		}
+	}
+	return (true);
 }

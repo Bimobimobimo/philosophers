@@ -6,7 +6,7 @@
 /*   By: lcollong <lcollong@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 10:12:52 by lcollong          #+#    #+#             */
-/*   Updated: 2025/03/04 14:23:07 by lcollong         ###   ########.fr       */
+/*   Updated: 2025/03/05 18:45:28 by lcollong         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,53 +16,58 @@
 # include <unistd.h>
 # include <stdlib.h>
 # include <stdio.h>
-# include <string.h>
 # include <pthread.h>
 # include <stdbool.h>
 # include <sys/time.h>
 # include <limits.h>
 
+#define GREY "\033[90m"
+#define BOLDRED "\033[1;31m"
+#define BLUE "\033[34m"
+#define GREEN "\033[32m"
+#define RESET "\033[0m" 
+#define BOLD "\033[1m"
+#define YELLOW "\033[38;2;255;165;0m"
+#define RED "\033[31m"
+
 typedef struct	s_data	t_data;
 
 typedef struct s_fork
 {
-	pthread_mutex_t	fork;
-	int				fork_id;
+	pthread_mutex_t	lock;
+	int				id;
 }	t_fork;
-
 
 typedef struct s_philo
 {
+	pthread_t		tid;
+	pthread_mutex_t	lock;
 	int				id;
 	long			meals_counter;
-	bool			finished;
 	long			last_meal_time;
+	bool			finished;
 	bool			died;
 	t_data			*data;
-	t_fork			*left_fork;
-	t_fork			*right_fork;
-	pthread_t		tid;
-	pthread_mutex_t	philo_mutex;
+	t_fork			*first_fork;
+	t_fork			*second_fork;
 }	t_philo;
 
-
-typedef struct s_data
+struct s_data
 {
 	long			philo_nb;
 	long			time2die;
 	long			time2eat;
 	long			time2sleep;
-	long			min_meals; // argument facultatif
+	long			min_meals;
 	long			start_time;
-	bool			the_end; // si un philo meurt ou si tous finished
-	bool			threads_ready;
-	pthread_mutex_t	sim_mutex; // permet d'eviter les data races
-	pthread_mutex_t	print_mutex; // permet a un thread d'ecrire de facon securisee
+	// bool			threads_ready;
+	bool			the_end;
+	pthread_mutex_t	sim_lock; // permet de lire data
+	pthread_mutex_t	print_lock;
 	pthread_t		monitor;
 	t_fork			*forks;
 	t_philo			*philos;
-}	t_data;
-
+};
 
 typedef enum	s_option
 {
@@ -75,11 +80,10 @@ typedef enum	s_option
 	UNLOCK,	
 } t_option;
 
-
 typedef enum	s_action
 {
-	LEFT,
-	RIGHT,
+	FIRST,
+	SECOND,
 	EAT,
 	SLEEP,
 	THINK,
@@ -92,24 +96,28 @@ bool		valid_arguments(int argc, char **argv);
 bool		valid_nb(char *str);
 bool		too_many_digits(char *str);
 long		atol_philo(const char *nptr);
-
 bool		parse_data(t_data *data, char **argv);
 bool		get_forks(t_data *data);
 
 // Main functions
 void		philosophers(t_data *ph);
-bool		get_philos(t_data *data, t_philo *philos);
+bool		init_philos(t_data *data, t_philo *philos);
 void		simulation(t_data *data);
 
 // Time Management
 long		timer(void);
 void		waiting(long time, t_data *data);
+bool		desynchronize_philos(t_philo *philo, t_data *data);
 
 // Mutexes
-bool		mutex_option(pthread_mutex_t *mutex, t_option choice, char *str);
+bool		mutex_option(pthread_mutex_t *mutex, t_option choice);
+bool		get_bool(pthread_mutex_t *mutex, bool value);
+bool		set_bool(pthread_mutex_t *mutex, bool value, bool result);
+long		get_long(pthread_mutex_t *mutex, long value);
+long		set_long(pthread_mutex_t *mutex, long value, long result);
 
 // Threads
-bool		thread_option(pthread_t thread, t_option choice,
+bool		thread_option(pthread_t *thread, t_option choice,
 				void *(*routine)(void *), void *argt);
 void		*philo_routine(void *argt);
 void		*monitoring(void *argt);
@@ -121,27 +129,5 @@ bool		print_action(t_philo *philo, t_data *data, t_action action);
 
 // Clean up
 void		free_all(t_data *data);
-
-
-
-
-
-
-
-
-
-// // Threads
-// pthread_t	create_threads(void);
-// void		join_threads(pthread_t *philo);
-
-// // Routines
-// void		*philo_routine(void *ptr);
-// void		*monitoring(void *ptr);
-
-
-
-// Utils
-
-
 
 #endif
