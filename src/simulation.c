@@ -6,19 +6,41 @@
 /*   By: lcollong <lcollong@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/01 12:35:46 by lcollong          #+#    #+#             */
-/*   Updated: 2025/03/06 18:01:12 by lcollong         ###   ########.fr       */
+/*   Updated: 2025/03/06 18:58:55 by lcollong         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../philo.h"
 
+static void	*one_routine(void *argt)
+{
+	t_philo	*philo;
+	t_data	*data;
+	bool	end;
+
+	philo = (t_philo *)argt;
+	data = philo->data;
+	set_long(&philo->lock, &philo[0].last_meal_time,
+		(timer() - get_long(&data->sim_lock, data->start_time)));
+	if (!print_action(philo, data, FIRST) || !print_action(philo, data, THINK))
+		return (NULL);
+	while (1)
+	{
+		mutex_option(&data->sim_lock, LOCK);
+		end = data->the_end;
+		mutex_option(&data->sim_lock, UNLOCK);
+		if (end)
+			break ;
+		usleep(9);
+	}
+	return (NULL);
+}
+
 static void	only_one_philo(t_philo *philo, t_data *data)
 {
-	philo[0].last_meal_time = timer();
-	if (!print_action(philo, data, FIRST) || !print_action(philo, data, SLEEP))
+	if (set_long(&data->sim_lock, &data->start_time, timer()) == -1)
 		return ;
-	while (!data->the_end)
-		usleep(100);
+	thread_option(&philo[0].tid, CREATE, one_routine, philo);
 	return ;
 }
 

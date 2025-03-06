@@ -6,7 +6,7 @@
 /*   By: lcollong <lcollong@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 15:43:59 by lcollong          #+#    #+#             */
-/*   Updated: 2025/03/06 18:00:32 by lcollong         ###   ########.fr       */
+/*   Updated: 2025/03/06 18:58:07 by lcollong         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,8 +62,9 @@ void	*ph_routine(void *argt)
 	philo = (t_philo *)argt;
 	if (!desynchronize_philos(philo, philo->data))
 		return (NULL);
-	philo->last_meal_time = get_long(&philo->data->sim_lock,
-			philo->data->start_time);
+	if (!set_long(&philo->lock, &philo->last_meal_time,
+			get_long(&philo->data->sim_lock, philo->data->start_time)))
+		return (NULL);
 	while (!get_bool(&philo->data->sim_lock, philo->data->the_end))
 	{
 		if (philo->finished)
