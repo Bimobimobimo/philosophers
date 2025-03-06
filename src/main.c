@@ -6,7 +6,7 @@
 /*   By: lcollong <lcollong@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 17:02:22 by lcollong          #+#    #+#             */
-/*   Updated: 2025/03/05 18:02:39 by lcollong         ###   ########.fr       */
+/*   Updated: 2025/03/06 13:01:04 by lcollong         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,10 +39,10 @@ static void	forks_to_philos(t_philo *philo, t_fork *forks, int philo_index)
 bool	init_philos(t_data *data, t_philo *philos)
 {
 	int		i;
-	//debug
-	t_fork *first;
-	t_fork *second;
-	//
+	// //debug
+	// t_fork *first;
+	// t_fork *second;
+	// //
 
 	i = 0;
 	while (i < data->philo_nb) // initier toutes les var des struc philo
@@ -57,15 +57,15 @@ bool	init_philos(t_data *data, t_philo *philos)
 		philos[i].tid = -1;
 		forks_to_philos(&philos[i], data->forks, i);
 
-		//debug
-		first = philos[i].first_fork;
-		second = philos[i].second_fork;
-		mutex_option(&data->print_lock, LOCK);
-		printf(YELLOW "philo %d a fourchettes %d en 1er et %d en 2e\n" RESET, philos[i].id, first->id, second->id);
-		mutex_option(&data->print_lock, UNLOCK);
-		//
+		// //debug
+		// first = philos[i].first_fork;
+		// second = philos[i].second_fork;
+		// mutex_option(&data->print_lock, LOCK);
+		// printf(YELLOW "philo %d a fourchettes %d en 1er et %d en 2e\n" RESET, philos[i].id, first->id, second->id);
+		// mutex_option(&data->print_lock, UNLOCK);
+		// //
 		
-		if (!mutex_option(&data->philos[i].lock, INIT)) //? pourquoi ?
+		if (!mutex_option(&data->philos[i].lock, INIT)) // pour pouvoir lire et ecrire les variables de la structure philo[i]
 			return (false);
 		i++;
 	}
@@ -95,7 +95,9 @@ void	philosophers(t_data *data)
 		if (!mutex_option(&data->forks[i].lock, INIT)) // un mutex par struc fork
 			return ;
 		data->forks[i].id = i; //l'id des fourchettes commence a 0
-		printf(GREEN "Fourchette numero %d creee\n" RESET, data->forks[i].id);
+		// //debug
+		// printf(GREEN "Fourchette numero %d creee\n" RESET, data->forks[i].id);
+		// //
 		i++;
 	}
 	if (!init_philos(data, data->philos))

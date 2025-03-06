@@ -6,7 +6,7 @@
 /*   By: lcollong <lcollong@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 10:12:52 by lcollong          #+#    #+#             */
-/*   Updated: 2025/03/05 18:45:28 by lcollong         ###   ########.fr       */
+/*   Updated: 2025/03/06 12:38:39 by lcollong         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,9 +112,9 @@ bool		desynchronize_philos(t_philo *philo, t_data *data);
 // Mutexes
 bool		mutex_option(pthread_mutex_t *mutex, t_option choice);
 bool		get_bool(pthread_mutex_t *mutex, bool value);
-bool		set_bool(pthread_mutex_t *mutex, bool value, bool result);
+bool		set_bool(pthread_mutex_t *mutex, bool *value, bool result);
 long		get_long(pthread_mutex_t *mutex, long value);
-long		set_long(pthread_mutex_t *mutex, long value, long result);
+long		set_long(pthread_mutex_t *mutex, long *value, long result);
 
 // Threads
 bool		thread_option(pthread_t *thread, t_option choice,

@@ -6,7 +6,7 @@
 /*   By: lcollong <lcollong@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 15:43:59 by lcollong          #+#    #+#             */
-/*   Updated: 2025/03/05 19:38:29 by lcollong         ###   ########.fr       */
+/*   Updated: 2025/03/06 13:23:23 by lcollong         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,14 +46,20 @@ static bool	taking_forks(t_philo *philo)
 
 static bool	eating(t_philo *philo)
 {
-	if (set_long(&philo->lock, philo->last_meal_time, timer()) == -1)
+	if (set_long(&philo->lock, &philo->last_meal_time, timer()) == -1)
 		return (false);
 	philo->meals_counter++;
 	if (!print_action(philo, philo->data, EAT))
 		return (false);
-	usleep(philo->data->time2eat * 1000);	
+	usleep(philo->data->time2eat * 1000);
+	
+	if (!mutex_option(&philo->lock, LOCK))
+		return (false);
 	if (philo->data->min_meals > 0 && philo->meals_counter >= philo->data->min_meals)
 		philo->finished = true;
+	if (!mutex_option(&philo->lock, UNLOCK))
+		return (false);
+		
 	if (!mutex_option(&philo->first_fork->lock, UNLOCK)
 		|| !mutex_option(&philo->second_fork->lock, UNLOCK))
 		return (false);

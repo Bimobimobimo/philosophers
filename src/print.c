@@ -6,7 +6,7 @@
 /*   By: lcollong <lcollong@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 11:33:37 by lcollong          #+#    #+#             */
-/*   Updated: 2025/03/05 19:14:17 by lcollong         ###   ########.fr       */
+/*   Updated: 2025/03/06 12:42:56 by lcollong         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,15 +54,15 @@ bool	print_action(t_philo *philo, t_data *data, t_action action)
 	if (!mutex_option(&data->print_lock, LOCK) || !mutex_option(&data->sim_lock, LOCK)) //? sim lock aussi ?
 		return (false);
 	if ((action == FIRST || action == SECOND) && !data->the_end)
-		printf("%ld  %d has taken a fork\n", time, philo->id);
+		printf("%ld %d has taken a fork\n", time, philo->id);
 	else if (action == EAT && !data->the_end)
-		printf("%ld  %d is eating\n", time, philo->id);
+		printf("%ld %d is eating\n", time, philo->id);
 	else if (action == SLEEP && !data->the_end)
-		printf("%ld  %d is sleeping\n", time, philo->id);
+		printf("%ld %d is sleeping\n", time, philo->id);
 	else if (action == THINK && !data->the_end)
-		printf("%ld  %d is thinking\n", time, philo->id);
+		printf("%ld %d is thinking\n", time, philo->id);
 	else if (action == DIED)
-		printf(BOLDRED "%ld  %d died\n" RESET, time, philo->id);
+		printf(BOLDRED "%ld %d died\n" RESET, time, philo->id);
 	if (!mutex_option(&data->print_lock, UNLOCK) || !mutex_option(&data->sim_lock, UNLOCK))
 		return (false);
 	return (true);
