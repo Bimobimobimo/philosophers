@@ -6,7 +6,7 @@
 /*   By: lcollong <lcollong@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 13:28:02 by lcollong          #+#    #+#             */
-/*   Updated: 2025/03/05 19:36:08 by lcollong         ###   ########.fr       */
+/*   Updated: 2025/03/06 16:47:33 by lcollong         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,24 +49,26 @@ bool	desynchronize_philos(t_philo *philo, t_data *data)
 {
 	long	time2sleep;
 	
-	time2sleep = 0;	
-	if (philo->data->philo_nb % 2 == 0)
+	time2sleep = 0;
+	if (data->philo_nb % 2 == 0) //nb pair de philosophes
 	{
 		if (philo->id % 2 == 0)
-			usleep(100);
+			usleep(10);
 	}
-	else
+	else //nb impair de philosophes
 	{
-		if (philo->id % 2 == 0)
-		{
-			if (!print_action(philo, data, SLEEP))
-				return (false);
-			time2sleep = (data->time2eat * 2 - data->time2sleep);
-			if (time2sleep < 0)
-				time2sleep = 0;
-			if (!usleep(0.1 * time2sleep * 1000)) //desynchro de 10% du time2sleep en microsecondes
-				return (false);
-		}
+		if (philo->id % 2 != 0) //id impair
+			usleep(10);
+		// if (philo->id % 2 == 0)
+		// {
+		// 	if (!print_action(philo, data, SLEEP))
+		// 		return (false);
+		// 	time2sleep = (data->time2eat * 2 - data->time2sleep);
+		// 	if (time2sleep < 0)
+		// 		time2sleep = 0;
+		// 	if (!usleep(0.1 * time2sleep * 1000)) //desynchro de 10% du time2sleep en microsecondes
+		// 		return (false);
+		// }
 	}
 	return (true);
 }

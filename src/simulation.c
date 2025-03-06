@@ -6,7 +6,7 @@
 /*   By: lcollong <lcollong@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/01 12:35:46 by lcollong          #+#    #+#             */
-/*   Updated: 2025/03/06 13:46:05 by lcollong         ###   ########.fr       */
+/*   Updated: 2025/03/06 17:16:39 by lcollong         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,9 +30,13 @@ static bool	death(t_data *data, t_philo *philo)
 	if (!mutex_option(&philo->lock, LOCK) || !mutex_option(&data->sim_lock, LOCK))
 		return (false);
 	time_passed = timer() - data->start_time - philo->last_meal_time;
+	// //debug
+	// printf("Time to die = %ld, last_meal_time = %ld or time passed = %ld\n", data->time2die, philo->last_meal_time, time_passed);
+	// usleep(50);
+	// //
 	if (!mutex_option(&philo->lock, UNLOCK) || !mutex_option(&data->sim_lock, UNLOCK))
 		return (false);
-	if (time_passed >= get_long(&data->sim_lock, data->time2die))
+	if (time_passed > get_long(&data->sim_lock, data->time2die))
 	{
 		// //debug
 		// printf("Time to die = %ld, or time passed = %ld\n", data->time2die, time_passed);
@@ -50,9 +54,9 @@ void	*monitoring(void *argt)
 	t_data	*data;
 
 	data = (t_data *)argt;
-	//debug
-	printf(YELLOW "Entered monitoring...\n" RESET);
-	//
+	// //debug
+	// printf(YELLOW "Entered monitoring...\n" RESET);
+	// //
 	while (!get_bool(&data->sim_lock, data->the_end))
 	{
 		i = 0;
@@ -105,7 +109,7 @@ void	simulation(t_data *data)
 			i++;
 		}
 	}
-	
+
 	if (!thread_option(&data->monitor, CREATE, monitoring, data)) // Creation du thread monitoring
 		return ;
 	// if (!set_bool(&data->sim_lock, data->threads_ready, true))
@@ -122,4 +126,13 @@ void	simulation(t_data *data)
 	set_bool(&data->sim_lock, &data->the_end, true);
 	if (!thread_option(&data->monitor, JOIN, NULL, NULL))
 		return ;
+
+	// //debug
+	// i = 0;
+	// while (i < data->philo_nb)
+	// {
+	// 	printf(GREEN "%d a mange %ld repas\n" RESET, data->philos[i].id, data->philos[i].meals_counter);
+	// 	i++;
+	// }
+	// //
 }

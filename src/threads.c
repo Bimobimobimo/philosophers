@@ -6,7 +6,7 @@
 /*   By: lcollong <lcollong@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 15:43:59 by lcollong          #+#    #+#             */
-/*   Updated: 2025/03/06 13:23:23 by lcollong         ###   ########.fr       */
+/*   Updated: 2025/03/06 16:40:10 by lcollong         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,8 +46,11 @@ static bool	taking_forks(t_philo *philo)
 
 static bool	eating(t_philo *philo)
 {
-	if (set_long(&philo->lock, &philo->last_meal_time, timer()) == -1)
+	if (set_long(&philo->lock, &philo->last_meal_time, (timer() - get_long(&philo->data->sim_lock, philo->data->start_time))) == -1)
 		return (false);
+	// //debug
+	// printf("Last_meal_time = %ld\n", get_long(&philo->lock, philo->last_meal_time));
+	// //
 	philo->meals_counter++;
 	if (!print_action(philo, philo->data, EAT))
 		return (false);
@@ -79,11 +82,10 @@ void	*philo_routine(void *argt)
 	
 	philo = (t_philo *)argt;
 	// wait_for_all_philos(philo->data);
-	
-	
+
 	if (!desynchronize_philos(philo, philo->data))
 		return (NULL);
-	
+
 	philo->last_meal_time = get_long(&philo->data->sim_lock, philo->data->start_time);
 
 	while (!get_bool(&philo->data->sim_lock, philo->data->the_end))
@@ -127,15 +129,15 @@ bool	thread_option(pthread_t *thread, t_option choice, void *(*philo_routine)(vo
 	{
 		if (pthread_join(*thread, NULL) != 0)
 			return (thread_mutex_error(choice));
-		else
-			printf(GREY "Thread joined\n" RESET);
+		// else
+		// 	printf(GREY "Thread joined\n" RESET);
 	}
 	else if (choice == DETACH)
 	{
 		if (pthread_detach(*thread) != 0)
 			return (thread_mutex_error(choice));
-		else
-			printf(GREY "Thread detached\n" RESET);
+		// else
+		// 	printf(GREY "Thread detached\n" RESET);
 	}
 	return (true);
 }

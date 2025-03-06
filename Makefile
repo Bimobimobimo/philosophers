@@ -6,7 +6,7 @@
 #    By: lcollong <lcollong@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/01/15 16:34:46 by lcollong          #+#    #+#              #
-#    Updated: 2025/03/05 18:19:24 by lcollong         ###   ########.fr        #
+#    Updated: 2025/03/06 17:21:54 by lcollong         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,7 +14,8 @@
 
 NAME = philo
 CC = cc
-CFLAGS += -Wall -Wextra -Werror -g -fsanitize=thread
+CFLAGS += -Wall -Wextra -Werror -g 
+#-fsanitize=thread
 
 SRC_DIR = src
 OBJ_DIR = obj
