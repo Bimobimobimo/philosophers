@@ -6,7 +6,7 @@
 /*   By: lcollong <lcollong@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/01 12:35:46 by lcollong          #+#    #+#             */
-/*   Updated: 2025/03/06 17:16:39 by lcollong         ###   ########.fr       */
+/*   Updated: 2025/03/06 18:01:12 by lcollong         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,8 @@
 
 static void	only_one_philo(t_philo *philo, t_data *data)
 {
-	// data->threads_ready = true;
 	philo[0].last_meal_time = timer();
-	if (!print_action(philo, data, FIRST) || !print_action(philo, data, SLEEP)) //ne peut pas manger car une seule fourchette !
+	if (!print_action(philo, data, FIRST) || !print_action(philo, data, SLEEP))
 		return ;
 	while (!data->the_end)
 		usleep(100);
@@ -27,23 +26,19 @@ static bool	death(t_data *data, t_philo *philo)
 {
 	long	time_passed;
 
-	if (!mutex_option(&philo->lock, LOCK) || !mutex_option(&data->sim_lock, LOCK))
+	if (!mutex_option(&philo->lock, LOCK)
+		|| !mutex_option(&data->sim_lock, LOCK))
 		return (false);
 	time_passed = timer() - data->start_time - philo->last_meal_time;
-	// //debug
-	// printf("Time to die = %ld, last_meal_time = %ld or time passed = %ld\n", data->time2die, philo->last_meal_time, time_passed);
-	// usleep(50);
-	// //
-	if (!mutex_option(&philo->lock, UNLOCK) || !mutex_option(&data->sim_lock, UNLOCK))
+	if (!mutex_option(&philo->lock, UNLOCK)
+		|| !mutex_option(&data->sim_lock, UNLOCK))
 		return (false);
 	if (time_passed > get_long(&data->sim_lock, data->time2die))
 	{
-		// //debug
-		// printf("Time to die = %ld, or time passed = %ld\n", data->time2die, time_passed);
-		// //
-		print_action(philo, data, DIED); //pas de check d'erreur car on retournera DEATH dans les 2 cas
+		set_bool(&data->sim_lock, &data->the_end, true);
+		print_action(philo, data, DIED);
 		return (true);
-	}	
+	}
 	return (false);
 }
 
@@ -54,9 +49,6 @@ void	*monitoring(void *argt)
 	t_data	*data;
 
 	data = (t_data *)argt;
-	// //debug
-	// printf(YELLOW "Entered monitoring...\n" RESET);
-	// //
 	while (!get_bool(&data->sim_lock, data->the_end))
 	{
 		i = 0;
@@ -64,25 +56,20 @@ void	*monitoring(void *argt)
 		while (i < get_long(&data->sim_lock, data->philo_nb))
 		{
 			if (death(data, &data->philos[i]))
-			{
-				set_bool(&data->sim_lock, &data->the_end, true);
 				break ;
-			}
-			if (!mutex_option(&data->philos[i].lock, LOCK))
-				return (NULL);
+			mutex_option(&data->philos[i].lock, LOCK);
 			if (data->philos[i].finished == true)
 				nb_of_finished_philos++;
-			if (!mutex_option(&data->philos[i].lock, UNLOCK))
-				return (NULL);
+			mutex_option(&data->philos[i].lock, UNLOCK);
 			i++;
 		}
 		if (nb_of_finished_philos == get_long(&data->sim_lock, data->philo_nb))
 			set_bool(&data->sim_lock, &data->the_end, true);
-	}	
+	}
 	return (NULL);
 }
 
-void	simulation(t_data *data)
+void	simulation(t_data *data, t_philo *philos)
 {
 	int	i;
 
@@ -90,49 +77,23 @@ void	simulation(t_data *data)
 	if (data->min_meals == 0 || data->philo_nb == 0)
 		return ;
 	if (data->philo_nb == 1)
-		only_one_philo(data->philos, data);
+		only_one_philo(philos, data);
 	else
 	{
 		if (set_long(&data->sim_lock, &data->start_time, timer()) == -1)
 			return ;
-		// //debug
-		// printf(YELLOW "Start time = %ld\n" RESET, get_long(&data->sim_lock, data->start_time));
-		// //
-		while (i < data->philo_nb) // creation de tous les threads de philos
+		while (i < data->philo_nb)
 		{
-			if (!thread_option(&data->philos[i].tid, CREATE, philo_routine,
-				&data->philos[i]))
+			if (!thread_option(&philos[i].tid, CREATE, ph_routine, philos + i))
 				return ;
-			// //debug
-			// printf(GREEN "Philo numero %d : thread cree\n" RESET, data->philos[i].id);
-			// //
 			i++;
 		}
 	}
-
-	if (!thread_option(&data->monitor, CREATE, monitoring, data)) // Creation du thread monitoring
+	if (!thread_option(&data->monitor, CREATE, monitoring, data))
 		return ;
-	// if (!set_bool(&data->sim_lock, data->threads_ready, true))
-	// 	return ;
-
 	i = 0;
-	while (i < data->philo_nb) 
-	{
-		if (!thread_option(&data->philos[i].tid, JOIN, NULL, NULL))
-			return ;
-		i++;
-	}
-
+	while (i < data->philo_nb)
+		thread_option(&data->philos[i++].tid, JOIN, NULL, NULL);
 	set_bool(&data->sim_lock, &data->the_end, true);
-	if (!thread_option(&data->monitor, JOIN, NULL, NULL))
-		return ;
-
-	// //debug
-	// i = 0;
-	// while (i < data->philo_nb)
-	// {
-	// 	printf(GREEN "%d a mange %ld repas\n" RESET, data->philos[i].id, data->philos[i].meals_counter);
-	// 	i++;
-	// }
-	// //
+	thread_option(&data->monitor, JOIN, NULL, NULL);
 }

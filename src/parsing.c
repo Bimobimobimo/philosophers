@@ -6,7 +6,7 @@
 /*   By: lcollong <lcollong@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 13:14:59 by lcollong          #+#    #+#             */
-/*   Updated: 2025/03/05 17:58:24 by lcollong         ###   ########.fr       */
+/*   Updated: 2025/03/06 17:25:41 by lcollong         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,12 +23,11 @@ bool	parse_data(t_data *data, char **argv)
 	else
 		data->min_meals = -1;
 	data->the_end = false;
-	// data->threads_ready = false;
 	data->start_time = -1;
 	data->monitor = -1;
 	data->forks = NULL;
 	data->philos = NULL;
-	if (!mutex_option(&data->sim_lock, INIT)) // mutex de la simul pour l'empecher de commencer avant que tout soit pret
+	if (!mutex_option(&data->sim_lock, INIT))
 		return (false);
 	if (!mutex_option(&data->print_lock, INIT))
 		return (false);

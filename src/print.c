@@ -6,7 +6,7 @@
 /*   By: lcollong <lcollong@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 11:33:37 by lcollong          #+#    #+#             */
-/*   Updated: 2025/03/06 12:42:56 by lcollong         ###   ########.fr       */
+/*   Updated: 2025/03/06 17:38:09 by lcollong         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ void	arg_error(void)
 	printf(RED "Time_to_sleep " RESET);
 	printf("and optionally ");
 	printf(YELLOW "Number_of_time_each_philosopher_must_eat\n" RESET);
-	printf(BOLD "\nAll numbers must be positive and < 2'147'483'647.\n\n" RESET);
+	printf(BOLD "\nAll numbers must be positive and < 2147483647.\n\n" RESET);
 }
 
 bool	thread_mutex_error(t_option choice)
@@ -51,7 +51,8 @@ bool	print_action(t_philo *philo, t_data *data, t_action action)
 	time = timer() - get_long(&data->sim_lock, data->start_time);
 	if (philo->finished)
 		return (true);
-	if (!mutex_option(&data->print_lock, LOCK) || !mutex_option(&data->sim_lock, LOCK)) //? sim lock aussi ?
+	if (!mutex_option(&data->print_lock, LOCK)
+		|| !mutex_option(&data->sim_lock, LOCK))
 		return (false);
 	if ((action == FIRST || action == SECOND) && !data->the_end)
 		printf("%ld %d has taken a fork\n", time, philo->id);
@@ -63,7 +64,8 @@ bool	print_action(t_philo *philo, t_data *data, t_action action)
 		printf("%ld %d is thinking\n", time, philo->id);
 	else if (action == DIED)
 		printf(BOLDRED "%ld %d died\n" RESET, time, philo->id);
-	if (!mutex_option(&data->print_lock, UNLOCK) || !mutex_option(&data->sim_lock, UNLOCK))
+	if (!mutex_option(&data->print_lock, UNLOCK)
+		|| !mutex_option(&data->sim_lock, UNLOCK))
 		return (false);
 	return (true);
 }

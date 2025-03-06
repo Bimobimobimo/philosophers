@@ -6,7 +6,7 @@
 /*   By: lcollong <lcollong@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 10:12:52 by lcollong          #+#    #+#             */
-/*   Updated: 2025/03/06 12:38:39 by lcollong         ###   ########.fr       */
+/*   Updated: 2025/03/06 18:00:41 by lcollong         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,16 +21,16 @@
 # include <sys/time.h>
 # include <limits.h>
 
-#define GREY "\033[90m"
-#define BOLDRED "\033[1;31m"
-#define BLUE "\033[34m"
-#define GREEN "\033[32m"
-#define RESET "\033[0m" 
-#define BOLD "\033[1m"
-#define YELLOW "\033[38;2;255;165;0m"
-#define RED "\033[31m"
+# define GREY "\033[90m"
+# define BOLDRED "\033[1;31m"
+# define BLUE "\033[34m"
+# define GREEN "\033[32m"
+# define RESET "\033[0m" 
+# define BOLD "\033[1m"
+# define YELLOW "\033[38;2;255;165;0m"
+# define RED "\033[31m"
 
-typedef struct	s_data	t_data;
+typedef struct s_data	t_data;
 
 typedef struct s_fork
 {
@@ -69,7 +69,7 @@ struct s_data
 	t_philo			*philos;
 };
 
-typedef enum	s_option
+typedef enum s_option
 {
 	CREATE,
 	DETACH,
@@ -78,9 +78,9 @@ typedef enum	s_option
 	DESTROY,
 	LOCK,
 	UNLOCK,	
-} t_option;
+}	t_option;
 
-typedef enum	s_action
+typedef enum s_action
 {
 	FIRST,
 	SECOND,
@@ -89,7 +89,6 @@ typedef enum	s_action
 	THINK,
 	DIED,
 }	t_action;
-
 
 // Parsing
 bool		valid_arguments(int argc, char **argv);
@@ -102,7 +101,7 @@ bool		get_forks(t_data *data);
 // Main functions
 void		philosophers(t_data *ph);
 bool		init_philos(t_data *data, t_philo *philos);
-void		simulation(t_data *data);
+void		simulation(t_data *data, t_philo *philos);
 
 // Time Management
 long		timer(void);
@@ -119,7 +118,7 @@ long		set_long(pthread_mutex_t *mutex, long *value, long result);
 // Threads
 bool		thread_option(pthread_t *thread, t_option choice,
 				void *(*routine)(void *), void *argt);
-void		*philo_routine(void *argt);
+void		*ph_routine(void *argt);
 void		*monitoring(void *argt);
 
 // Printing messages

@@ -6,7 +6,7 @@
 /*   By: lcollong <lcollong@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 17:27:46 by lcollong          #+#    #+#             */
-/*   Updated: 2025/03/03 15:22:32 by lcollong         ###   ########.fr       */
+/*   Updated: 2025/03/06 17:28:14 by lcollong         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ bool	valid_nb(char *str)
 		i++;
 	while (str[i])
 	{
-		if (str[i] < '0' && str[i] > '9') //faux si autre chose que des chiffres
+		if (str[i] < '0' && str[i] > '9')
 			return (false);
 		i++;
 	}
