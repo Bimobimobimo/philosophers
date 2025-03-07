@@ -6,7 +6,7 @@
 /*   By: lcollong <lcollong@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 17:02:22 by lcollong          #+#    #+#             */
-/*   Updated: 2025/03/06 17:57:43 by lcollong         ###   ########.fr       */
+/*   Updated: 2025/03/07 15:17:23 by lcollong         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,7 +92,7 @@ int	main(int argc, char **argv)
 	t_data	*data;
 
 	data = NULL;
-	if (valid_arguments(argc, argv))
+	if (valid_arguments(argc, argv) == true)
 	{
 		data = malloc(sizeof(t_data));
 		if (!data)

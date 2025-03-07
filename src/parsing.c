@@ -6,7 +6,7 @@
 /*   By: lcollong <lcollong@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 13:14:59 by lcollong          #+#    #+#             */
-/*   Updated: 2025/03/07 14:57:15 by lcollong         ###   ########.fr       */
+/*   Updated: 2025/03/07 15:42:34 by lcollong         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,20 +50,20 @@ bool	valid_arguments(int argc, char **argv)
 	return (true);
 }
 
-long	get_min_meal_of_all(t_philo *philo)
-{
-	t_data	*data;
-	int		i;
-	long	meals;
+// long	get_min_meal_of_all(t_philo *philo)
+// {
+// 	t_data	*data;
+// 	int		i;
+// 	long	meals;
 
-	i = 0;
-	data = philo->data;
-	meals = philo[i].meals_counter;
-	while (i < data->philo_nb)
-	{
-		if (philo[i].meals_counter < meals)
-			meals = philo[i].meals_counter;
-		i++;
-	}
-	return (meals);
-}
+// 	i = 0;
+// 	data = philo->data;
+// 	meals = philo[i].meals_counter;
+// 	while (i < data->philo_nb)
+// 	{
+// 		if (philo[i].meals_counter < meals)
+// 			meals = philo[i].meals_counter;
+// 		i++;
+// 	}
+// 	return (meals);
+// }
