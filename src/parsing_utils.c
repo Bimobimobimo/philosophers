@@ -6,7 +6,7 @@
 /*   By: lcollong <lcollong@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 17:27:46 by lcollong          #+#    #+#             */
-/*   Updated: 2025/03/07 15:42:01 by lcollong         ###   ########.fr       */
+/*   Updated: 2025/03/07 16:01:50 by lcollong         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,8 +30,6 @@ long	atol_philo(const char *nptr)
 	return (nb);
 }
 
-// compte cb de chiffres, si superieur a 10, alors c'est forcement
-// > INT MAX car 2 147 483 647 = 10 chiffres
 bool	too_many_digits(char *str)
 {
 	int	i;

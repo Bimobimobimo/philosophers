@@ -6,17 +6,12 @@
 /*   By: lcollong <lcollong@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 17:02:22 by lcollong          #+#    #+#             */
-/*   Updated: 2025/03/07 15:17:23 by lcollong         ###   ########.fr       */
+/*   Updated: 2025/03/07 16:45:42 by lcollong         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../philo.h"
 
-// Dire aux philos quelles fourchettes prendre et dans quel ordre.
-// philo_index = part de 0, correspond a la position du philosophe,
-// alors que philo->id part de 1, c'est son numero.
-// Index impair et pair prennent droite et gauche dans ordres differents pour
-// eviter deadlock (tout le monde aurait une seule fouchette).
 static void	forks_to_philos(t_philo *philo, t_fork *forks, int philo_index)
 {
 	if (philo->id == philo->data->philo_nb)
@@ -47,7 +42,6 @@ bool	init_philos(t_data *data, t_philo *philos)
 		philos[i].meals_counter = 0;
 		philos[i].last_meal_time = data->start_time;
 		philos[i].finished = false;
-		philos[i].died = false;
 		philos[i].data = data;
 		philos[i].tid = -1;
 		forks_to_philos(&philos[i], data->forks, i);

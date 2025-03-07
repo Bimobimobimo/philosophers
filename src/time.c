@@ -6,7 +6,7 @@
 /*   By: lcollong <lcollong@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 13:28:02 by lcollong          #+#    #+#             */
-/*   Updated: 2025/03/07 14:01:08 by lcollong         ###   ########.fr       */
+/*   Updated: 2025/03/07 16:22:12 by lcollong         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,6 @@ long	timer(void)
 	return (time);
 }
 
-// eviter les injustices en cas de nombre impair de philosophes
 bool	desynchronize_philos(t_philo *philo, t_data *data)
 {
 	if (data->philo_nb % 2 == 0)

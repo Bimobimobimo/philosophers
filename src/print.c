@@ -6,7 +6,7 @@
 /*   By: lcollong <lcollong@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 11:33:37 by lcollong          #+#    #+#             */
-/*   Updated: 2025/03/07 12:49:21 by lcollong         ###   ########.fr       */
+/*   Updated: 2025/03/07 16:31:27 by lcollong         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,8 +39,6 @@ bool	thread_mutex_error(t_option choice)
 		printf(BOLDRED "Thread creation error\n" RESET);
 	else if (choice == JOIN)
 		printf(BOLDRED "Thread joining error\n" RESET);
-	else if (choice == DETACH)
-		printf(BOLDRED "Thread detaching error\n" RESET);
 	return (false);
 }
 

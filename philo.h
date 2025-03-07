@@ -6,7 +6,7 @@
 /*   By: lcollong <lcollong@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 10:12:52 by lcollong          #+#    #+#             */
-/*   Updated: 2025/03/07 14:45:52 by lcollong         ###   ########.fr       */
+/*   Updated: 2025/03/07 16:46:43 by lcollong         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,6 @@ typedef struct s_philo
 	long			meals_counter;
 	long			last_meal_time;
 	bool			finished;
-	bool			died;
 	t_data			*data;
 	t_fork			*first_fork;
 	t_fork			*second_fork;
@@ -59,7 +58,6 @@ struct s_data
 	long			time2eat;
 	long			time2sleep;
 	long			min_meals;
-	// long			min_meal_of_all; //added
 	long			start_time;
 	bool			the_end;
 	pthread_mutex_t	sim_lock;
@@ -72,7 +70,6 @@ struct s_data
 typedef enum s_option
 {
 	CREATE,
-	DETACH,
 	JOIN,
 	INIT,
 	DESTROY,

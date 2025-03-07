@@ -6,7 +6,7 @@
 /*   By: lcollong <lcollong@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 15:43:59 by lcollong          #+#    #+#             */
-/*   Updated: 2025/03/07 14:59:36 by lcollong         ###   ########.fr       */
+/*   Updated: 2025/03/07 16:31:51 by lcollong         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,11 +108,6 @@ bool	thread_option(pthread_t *thread, t_option choice,
 	else if (choice == JOIN)
 	{
 		if (pthread_join(*thread, NULL) != 0)
-			return (thread_mutex_error(choice));
-	}
-	else if (choice == DETACH)
-	{
-		if (pthread_detach(*thread) != 0)
 			return (thread_mutex_error(choice));
 	}
 	return (true);
