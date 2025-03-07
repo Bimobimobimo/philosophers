@@ -6,7 +6,7 @@
 /*   By: lcollong <lcollong@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 12:52:36 by lcollong          #+#    #+#             */
-/*   Updated: 2025/03/06 17:25:22 by lcollong         ###   ########.fr       */
+/*   Updated: 2025/03/07 14:45:33 by lcollong         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,13 +37,13 @@ bool	mutex_option(pthread_mutex_t *mutex, t_option choice)
 	return (true);
 }
 
-bool	get_bool(pthread_mutex_t *mutex, bool value)
+bool	get_bool(pthread_mutex_t *mutex, bool *value)
 {
 	bool	result;
 
 	if (!mutex_option(mutex, LOCK))
 		return (false);
-	result = value;
+	result = *value;
 	if (!mutex_option(mutex, UNLOCK))
 		return (false);
 	return (result);

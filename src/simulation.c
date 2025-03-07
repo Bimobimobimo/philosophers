@@ -6,7 +6,7 @@
 /*   By: lcollong <lcollong@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/01 12:35:46 by lcollong          #+#    #+#             */
-/*   Updated: 2025/03/06 18:58:55 by lcollong         ###   ########.fr       */
+/*   Updated: 2025/03/07 14:59:47 by lcollong         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ void	*monitoring(void *argt)
 	t_data	*data;
 
 	data = (t_data *)argt;
-	while (!get_bool(&data->sim_lock, data->the_end))
+	while (!get_bool(&data->sim_lock, &data->the_end))
 	{
 		i = 0;
 		nb_of_finished_philos = 0;

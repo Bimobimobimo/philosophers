@@ -6,7 +6,7 @@
 /*   By: lcollong <lcollong@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 11:33:37 by lcollong          #+#    #+#             */
-/*   Updated: 2025/03/06 17:38:09 by lcollong         ###   ########.fr       */
+/*   Updated: 2025/03/07 12:49:21 by lcollong         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ bool	print_action(t_philo *philo, t_data *data, t_action action)
 	if ((action == FIRST || action == SECOND) && !data->the_end)
 		printf("%ld %d has taken a fork\n", time, philo->id);
 	else if (action == EAT && !data->the_end)
-		printf("%ld %d is eating\n", time, philo->id);
+		printf(YELLOW "%ld %d is eating\n" RESET, time, philo->id);
 	else if (action == SLEEP && !data->the_end)
 		printf("%ld %d is sleeping\n", time, philo->id);
 	else if (action == THINK && !data->the_end)

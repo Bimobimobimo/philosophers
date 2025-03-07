@@ -6,7 +6,7 @@
 /*   By: lcollong <lcollong@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 10:12:52 by lcollong          #+#    #+#             */
-/*   Updated: 2025/03/06 18:00:41 by lcollong         ###   ########.fr       */
+/*   Updated: 2025/03/07 14:45:52 by lcollong         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,10 +59,10 @@ struct s_data
 	long			time2eat;
 	long			time2sleep;
 	long			min_meals;
+	// long			min_meal_of_all; //added
 	long			start_time;
-	// bool			threads_ready;
 	bool			the_end;
-	pthread_mutex_t	sim_lock; // permet de lire data
+	pthread_mutex_t	sim_lock;
 	pthread_mutex_t	print_lock;
 	pthread_t		monitor;
 	t_fork			*forks;
@@ -97,6 +97,7 @@ bool		too_many_digits(char *str);
 long		atol_philo(const char *nptr);
 bool		parse_data(t_data *data, char **argv);
 bool		get_forks(t_data *data);
+long		get_min_meal_of_all(t_philo *philo);
 
 // Main functions
 void		philosophers(t_data *ph);
@@ -110,7 +111,7 @@ bool		desynchronize_philos(t_philo *philo, t_data *data);
 
 // Mutexes
 bool		mutex_option(pthread_mutex_t *mutex, t_option choice);
-bool		get_bool(pthread_mutex_t *mutex, bool value);
+bool		get_bool(pthread_mutex_t *mutex, bool *value);
 bool		set_bool(pthread_mutex_t *mutex, bool *value, bool result);
 long		get_long(pthread_mutex_t *mutex, long value);
 long		set_long(pthread_mutex_t *mutex, long *value, long result);
@@ -119,6 +120,7 @@ long		set_long(pthread_mutex_t *mutex, long *value, long result);
 bool		thread_option(pthread_t *thread, t_option choice,
 				void *(*routine)(void *), void *argt);
 void		*ph_routine(void *argt);
+bool		thinking(t_philo *philo);
 void		*monitoring(void *argt);
 
 // Printing messages

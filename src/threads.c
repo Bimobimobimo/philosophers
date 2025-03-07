@@ -6,7 +6,7 @@
 /*   By: lcollong <lcollong@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 15:43:59 by lcollong          #+#    #+#             */
-/*   Updated: 2025/03/06 18:58:07 by lcollong         ###   ########.fr       */
+/*   Updated: 2025/03/07 14:59:36 by lcollong         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,11 +27,14 @@ static bool	taking_forks(t_philo *philo)
 
 static bool	eating(t_philo *philo)
 {
+	long	meals_counter;
+
 	if (set_long(&philo->lock, &philo->last_meal_time,
 			(timer() - get_long(&philo->data->sim_lock,
 					philo->data->start_time))) == -1)
 		return (false);
-	philo->meals_counter++;
+	meals_counter = get_long(&philo->lock, philo->meals_counter);
+	set_long(&philo->lock, &philo->meals_counter, meals_counter + 1);
 	if (!print_action(philo, philo->data, EAT))
 		return (false);
 	usleep(philo->data->time2eat * 1000);
@@ -48,10 +51,22 @@ static bool	eating(t_philo *philo)
 	return (true);
 }
 
-static bool	thinking(t_philo *philo)
+bool	thinking(t_philo *philo)
 {
+	long	time2eat;
+	long	time2sleep;
+	long	time2think;
+
 	if (!print_action(philo, philo->data, THINK))
 		return (false);
+	if (philo->data->philo_nb % 2 == 0)
+		return (true);
+	time2eat = philo->data->time2eat;
+	time2sleep = philo->data->time2sleep;
+	time2think = time2eat * 2 - time2sleep;
+	if (time2think < 0)
+		time2think = 0;
+	usleep(time2think * 0.5 * 1000);
 	return (true);
 }
 
@@ -65,7 +80,7 @@ void	*ph_routine(void *argt)
 	if (!set_long(&philo->lock, &philo->last_meal_time,
 			get_long(&philo->data->sim_lock, philo->data->start_time)))
 		return (NULL);
-	while (!get_bool(&philo->data->sim_lock, philo->data->the_end))
+	while (!get_bool(&philo->data->sim_lock, &philo->data->the_end))
 	{
 		if (philo->finished)
 			return (NULL);
